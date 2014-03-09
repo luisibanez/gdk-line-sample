@@ -19,8 +19,8 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <com.google.android.glass.sample.compass.CompassView
-        android:id="@+id/compass"
+    <com.google.android.glass.sample.line.LineView
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

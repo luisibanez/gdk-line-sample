@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass;
+package com.kitware.android.glass.sample.line;
 
-import com.google.android.glass.sample.compass.util.MathUtils;
+import com.kitware.android.glass.sample.line.util.MathUtils;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -29,19 +29,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 /**
- * This activity manages the options menu that appears when the user taps on the compass's live
+ * This activity manages the options menu that appears when the user taps on the line's live
  * card.
  */
-public class CompassMenuActivity extends Activity {
+public class LineMenuActivity extends Activity {
 
-    private CompassService.CompassBinder mCompassService;
+    private LineService.LineBinder mLineService;
     private boolean mResumed;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            if (service instanceof CompassService.CompassBinder) {
-                mCompassService = (CompassService.CompassBinder) service;
+            if (service instanceof LineService.LineBinder) {
+                mLineService = (LineService.LineBinder) service;
                 openOptionsMenu();
             }
         }
@@ -55,7 +55,7 @@ public class CompassMenuActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bindService(new Intent(this, CompassService.class), mConnection, 0);
+        bindService(new Intent(this, LineService.class), mConnection, 0);
     }
 
     @Override
@@ -73,14 +73,14 @@ public class CompassMenuActivity extends Activity {
 
     @Override
     public void openOptionsMenu() {
-        if (mResumed && mCompassService != null) {
+        if (mResumed && mLineService != null) {
             super.openOptionsMenu();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.compass, menu);
+        getMenuInflater().inflate(R.menu.line, menu);
         return true;
     }
 
@@ -88,10 +88,10 @@ public class CompassMenuActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.read_aloud:
-                mCompassService.readHeadingAloud();
+                mLineService.readHeadingAloud();
                 return true;
             case R.id.stop:
-                stopService(new Intent(this, CompassService.class));
+                stopService(new Intent(this, LineService.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

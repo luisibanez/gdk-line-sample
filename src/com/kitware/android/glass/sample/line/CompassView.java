@@ -14,10 +14,10 @@
  * the License.
  */
 
-package com.google.android.glass.sample.compass;
+package com.kitware.android.glass.sample.line;
 
-import com.google.android.glass.sample.compass.model.Place;
-import com.google.android.glass.sample.compass.util.MathUtils;
+import com.kitware.android.glass.sample.line.model.Place;
+import com.kitware.android.glass.sample.line.util.MathUtils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -44,10 +44,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Draws a stylized compass, with text labels at the cardinal and ordinal directions, and tick
+ * Draws a stylized line, with text labels at the cardinal and ordinal directions, and tick
  * marks at the half-winds. The red "needles" in the display mark the current heading.
  */
-public class CompassView extends View {
+public class LineView extends View {
 
     /** Various dimensions and other drawing-related constants. */
     private static final float NEEDLE_WIDTH = 6;
@@ -62,7 +62,7 @@ public class CompassView extends View {
     private static final float PLACE_TEXT_MARGIN = 8.0f;
 
     /**
-     * The maximum number of places names to allow to stack vertically underneath the compass
+     * The maximum number of places names to allow to stack vertically underneath the line
      * direction labels.
      */
     private static final int MAX_OVERLAPPING_PLACE_NAMES = 4;
@@ -97,15 +97,15 @@ public class CompassView extends View {
     private final String[] mDirections;
     private final ValueAnimator mAnimator;
 
-    public CompassView(Context context) {
+    public LineView(Context context) {
         this(context, null, 0);
     }
 
-    public CompassView(Context context, AttributeSet attrs) {
+    public LineView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CompassView(Context context, AttributeSet attrs, int defStyle) {
+    public LineView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         mPaint = new Paint();
@@ -139,7 +139,7 @@ public class CompassView extends View {
 
         mPlaceBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.place_mark);
 
-        // We use NaN to indicate that the compass is being drawn for the first
+        // We use NaN to indicate that the line is being drawn for the first
         // time, so that we can jump directly to the starting orientation
         // instead of spinning from a default value of 0.
         mAnimatedHeading = Float.NaN;
@@ -170,7 +170,7 @@ public class CompassView extends View {
     }
 
     /**
-     * Sets the current heading in degrees and redraws the compass. If the angle is not between 0
+     * Sets the current heading in degrees and redraws the line. If the angle is not between 0
      * and 360, it is shifted to be in that range.
      *
      * @param degrees the current heading
@@ -181,7 +181,7 @@ public class CompassView extends View {
     }
 
     /**
-     * Sets the list of nearby places that the compass should display. This list is recalculated
+     * Sets the list of nearby places that the line should display. This list is recalculated
      * whenever the user's location changes, so that only locations within a certain distance will
      * be displayed.
      *
@@ -211,7 +211,7 @@ public class CompassView extends View {
             drawPlaces(canvas, pixelsPerDegree, i * pixelsPerDegree * 360);
         }
 
-        drawCompassDirections(canvas, pixelsPerDegree);
+        drawLineDirections(canvas, pixelsPerDegree);
 
         canvas.restore();
 
@@ -221,12 +221,12 @@ public class CompassView extends View {
     }
 
     /**
-     * Draws the compass direction strings (N, NW, W, etc.).
+     * Draws the line direction strings (N, NW, W, etc.).
      *
      * @param canvas the {@link Canvas} upon which to draw
      * @param pixelsPerDegree the size, in pixels, of one degree step
      */
-    private void drawCompassDirections(Canvas canvas, float pixelsPerDegree) {
+    private void drawLineDirections(Canvas canvas, float pixelsPerDegree) {
         float degreesPerTick = 360.0f / mDirections.length;
 
         mPaint.setColor(Color.WHITE);
@@ -269,7 +269,7 @@ public class CompassView extends View {
 
                 // Loop over the list of nearby places (those within 10 km of the user's current
                 // location), and compute the relative bearing from the user's location to the
-                // place's location. This determines the position on the compass view where the
+                // place's location. This determines the position on the line view where the
                 // pin will be drawn.
                 for (Place place : mNearbyPlaces) {
                     double latitude2 = place.getLatitude();
@@ -317,7 +317,7 @@ public class CompassView extends View {
                         }
                     } while (intersects && numberOfTries <= MAX_OVERLAPPING_PLACE_NAMES);
 
-                    // Only draw the string if it would not go high enough to overlap the compass
+                    // Only draw the string if it would not go high enough to overlap the line
                     // directions. This means some places may not be drawn, even if they're nearby.
                     if (numberOfTries <= MAX_OVERLAPPING_PLACE_NAMES) {
                         mAllBounds.add(textBounds);
@@ -335,7 +335,7 @@ public class CompassView extends View {
     }
 
     /**
-     * Draws a needle that is centered at the top or bottom of the compass.
+     * Draws a needle that is centered at the top or bottom of the line.
      *
      * @param canvas the {@link Canvas} upon which to draw
      * @param bottom true to draw the bottom needle, or false to draw the top needle
@@ -368,7 +368,7 @@ public class CompassView extends View {
     }
 
     /**
-     * Sets up a {@link ValueAnimator} that will be used to animate the compass
+     * Sets up a {@link ValueAnimator} that will be used to animate the line
      * when the distance between two sensor events is large.
      */
     private void setupAnimator() {
@@ -419,12 +419,12 @@ public class CompassView extends View {
 
             if (Float.isNaN(mAnimatedHeading) || shortest < MIN_DISTANCE_TO_ANIMATE) {
                 // If the distance to the destination angle is small enough (or if this is the
-                // first time the compass is being displayed), it will be more fluid to just redraw
+                // first time the line is being displayed), it will be more fluid to just redraw
                 // immediately instead of doing an animation.
                 mAnimatedHeading = end;
                 invalidate();
             } else {
-                // For larger distances (i.e., if the compass "jumps" because of sensor calibration
+                // For larger distances (i.e., if the line "jumps" because of sensor calibration
                 // issues), we animate the effect to provide a more fluid user experience. The
                 // calculation below finds the shortest distance between the two angles, which may
                 // involve crossing 0/360 degrees.

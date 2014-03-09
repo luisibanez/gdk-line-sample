@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass;
+package com.kitware.android.glass.sample.line;
 
-import com.google.android.glass.sample.compass.model.Landmarks;
-import com.google.android.glass.sample.compass.model.Place;
+import com.kitware.android.glass.sample.line.model.Landmarks;
+import com.kitware.android.glass.sample.line.model.Place;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -38,21 +38,21 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The surface callback that provides the rendering logic for the compass live card. This callback
+ * The surface callback that provides the rendering logic for the line live card. This callback
  * also manages the lifetime of the sensor and location event listeners (through
  * {@link OrientationManager}) so that tracking only occurs when the card is visible.
  */
-public class CompassRenderer implements SurfaceHolder.Callback {
+public class LineRenderer implements SurfaceHolder.Callback {
 
-    private static final String TAG = CompassRenderer.class.getSimpleName();
+    private static final String TAG = LineRenderer.class.getSimpleName();
 
     /**
-     * The (absolute) pitch angle beyond which the compass will display a message telling the user
+     * The (absolute) pitch angle beyond which the line will display a message telling the user
      * that his or her head is at too steep an angle to be reliable.
      */
     private static final float TOO_STEEP_PITCH_DEGREES = 70.0f;
 
-    /** The refresh rate, in frames per second, of the compass. */
+    /** The refresh rate, in frames per second, of the line. */
     private static final int REFRESH_RATE_FPS = 45;
 
     /** The duration, in milliseconds, of one frame. */
@@ -66,18 +66,18 @@ public class CompassRenderer implements SurfaceHolder.Callback {
     private int mSurfaceHeight;
 
     private final FrameLayout mLayout;
-    private final CompassView mCompassView;
+    private final LineView mLineView;
     private final RelativeLayout mTipsContainer;
     private final TextView mTipsView;
     private final OrientationManager mOrientationManager;
     private final Landmarks mLandmarks;
 
-    private final OrientationManager.OnChangedListener mCompassListener =
+    private final OrientationManager.OnChangedListener mLineListener =
             new OrientationManager.OnChangedListener() {
 
         @Override
         public void onOrientationChanged(OrientationManager orientationManager) {
-            mCompassView.setHeading(orientationManager.getHeading());
+            mLineView.setHeading(orientationManager.getHeading());
 
             boolean oldTooSteep = mTooSteep;
             mTooSteep = (Math.abs(orientationManager.getPitch()) > TOO_STEEP_PITCH_DEGREES);
@@ -91,7 +91,7 @@ public class CompassRenderer implements SurfaceHolder.Callback {
             Location location = orientationManager.getLocation();
             List<Place> places = mLandmarks.getNearbyLandmarks(
                     location.getLatitude(), location.getLongitude());
-            mCompassView.setNearbyPlaces(places);
+            mLineView.setNearbyPlaces(places);
         }
 
         @Override
@@ -102,23 +102,23 @@ public class CompassRenderer implements SurfaceHolder.Callback {
     };
 
     /**
-     * Creates a new instance of the {@code CompassRenderer} with the specified context,
+     * Creates a new instance of the {@code LineRenderer} with the specified context,
      * orientation manager, and landmark collection.
      */
-    public CompassRenderer(Context context, OrientationManager orientationManager,
+    public LineRenderer(Context context, OrientationManager orientationManager,
                 Landmarks landmarks) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        mLayout = (FrameLayout) inflater.inflate(R.layout.compass, null);
+        mLayout = (FrameLayout) inflater.inflate(R.layout.line, null);
         mLayout.setWillNotDraw(false);
 
-        mCompassView = (CompassView) mLayout.findViewById(R.id.compass);
+        mLineView = (LineView) mLayout.findViewById(R.id.line);
         mTipsContainer = (RelativeLayout) mLayout.findViewById(R.id.tips_container);
         mTipsView = (TextView) mLayout.findViewById(R.id.tips_view);
 
         mOrientationManager = orientationManager;
         mLandmarks = landmarks;
 
-        mCompassView.setOrientationManager(mOrientationManager);
+        mLineView.setOrientationManager(mOrientationManager);
     }
 
     @Override
@@ -132,14 +132,14 @@ public class CompassRenderer implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         mHolder = holder;
 
-        mOrientationManager.addOnChangedListener(mCompassListener);
+        mOrientationManager.addOnChangedListener(mLineListener);
         mOrientationManager.start();
 
         if (mOrientationManager.hasLocation()) {
             Location location = mOrientationManager.getLocation();
             List<Place> nearbyPlaces = mLandmarks.getNearbyLandmarks(
                     location.getLatitude(), location.getLongitude());
-            mCompassView.setNearbyPlaces(nearbyPlaces);
+            mLineView.setNearbyPlaces(nearbyPlaces);
         }
 
         mRenderThread = new RenderThread();
@@ -150,7 +150,7 @@ public class CompassRenderer implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder holder) {
         mRenderThread.quit();
 
-        mOrientationManager.removeOnChangedListener(mCompassListener);
+        mOrientationManager.removeOnChangedListener(mLineListener);
         mOrientationManager.stop();
     }
 
@@ -172,7 +172,7 @@ public class CompassRenderer implements SurfaceHolder.Callback {
     }
 
     /**
-     * Repaints the compass.
+     * Repaints the line.
      */
     private synchronized void repaint() {
         Canvas canvas = null;
@@ -196,7 +196,7 @@ public class CompassRenderer implements SurfaceHolder.Callback {
 
     /**
      * Shows or hides the tip view with an appropriate message based on the current accuracy of the
-     * compass.
+     * line.
      */
     private void updateTipsView() {
         int stringId = 0;
@@ -223,7 +223,7 @@ public class CompassRenderer implements SurfaceHolder.Callback {
     }
 
     /**
-     * Redraws the compass in the background.
+     * Redraws the line in the background.
      */
     private class RenderThread extends Thread {
         private boolean mShouldRun;

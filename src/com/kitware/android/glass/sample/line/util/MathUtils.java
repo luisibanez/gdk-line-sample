@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass.util;
+package com.kitware.android.glass.sample.line.util;
 
 /**
  * A utility class containing arithmetic and geometry helper methods.
  */
 public class MathUtils {
 
-    /** The number of half winds for boxing the compass. */
+    /** The number of half winds for boxing the line. */
     private static final int NUMBER_OF_HALF_WINDS = 16;
 
     /** The Earth's radius, in kilometers. */
@@ -53,7 +53,7 @@ public class MathUtils {
 
     /**
      * Converts the specified heading angle into an index between 0-15 that can be used to retrieve
-     * the direction name for that heading (known as "boxing the compass", down to the half-wind
+     * the direction name for that heading (known as "boxing the line", down to the half-wind
      * level).
      *
      * @param heading the heading angle

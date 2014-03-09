@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass.model;
+package com.kitware.android.glass.sample.line.model;
 
-import com.google.android.glass.sample.compass.R;
-import com.google.android.glass.sample.compass.util.MathUtils;
+import com.kitware.android.glass.sample.line.R;
+import com.kitware.android.glass.sample.line.util.MathUtils;
 
 import android.content.Context;
 import android.util.Log;
@@ -35,14 +35,14 @@ import java.util.List;
 
 /**
  * This class provides access to a list of hard-coded landmarks (located in
- * {@code res/raw/landmarks.json}) that will appear on the compass when the user is near them.
+ * {@code res/raw/landmarks.json}) that will appear on the line when the user is near them.
  */
 public class Landmarks {
 
     private static final String TAG = Landmarks.class.getSimpleName();
 
     /**
-     * The threshold used to display a landmark on the compass.
+     * The threshold used to display a landmark on the line.
      */
     private static final double MAX_DISTANCE_KM = 10;
 

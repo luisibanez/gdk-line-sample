@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.android.glass.sample.compass;
+package com.kitware.android.glass.sample.line;
 
-import com.google.android.glass.sample.compass.util.MathUtils;
+import com.kitware.android.glass.sample.line.util.MathUtils;
 
 import android.content.Context;
 import android.hardware.GeomagneticField;
@@ -52,12 +52,12 @@ public class OrientationManager {
 
     /**
      * The maximum age of a location retrieved from the passive location provider before it is
-     * considered too old to use when the compass first starts up.
+     * considered too old to use when the line first starts up.
      */
     private static final long MAX_LOCATION_AGE_MILLIS = TimeUnit.MINUTES.toMillis(30);
 
     /**
-     * The sensors used by the compass are mounted in the movable arm on Glass. Depending on how
+     * The sensors used by the line are mounted in the movable arm on Glass. Depending on how
      * this arm is rotated, it may produce a displacement ranging anywhere from 0 to about 12
      * degrees. Since there is no way to know exactly how far the arm is rotated, we just split the
      * difference.
@@ -66,7 +66,7 @@ public class OrientationManager {
 
     /**
      * Classes should implement this interface if they want to be notified of changes in the user's
-     * location, orientation, or the accuracy of the compass.
+     * location, orientation, or the accuracy of the line.
      */
     public interface OnChangedListener {
         /**
@@ -84,7 +84,7 @@ public class OrientationManager {
         void onLocationChanged(OrientationManager orientationManager);
 
         /**
-         * Called when the accuracy of the compass changes.
+         * Called when the accuracy of the line changes.
          *
          * @param orientationManager the orientation manager that detected the change
          */
@@ -254,7 +254,7 @@ public class OrientationManager {
 
     /**
      * Gets a value indicating whether there is too much magnetic field interference for the
-     * compass to be reliable.
+     * line to be reliable.
      *
      * @return true if there is magnetic interference, otherwise false
      */
@@ -319,7 +319,7 @@ public class OrientationManager {
     }
 
     /**
-     * Notifies all listeners that the compass's accuracy has changed.
+     * Notifies all listeners that the line's accuracy has changed.
      */
     private void notifyAccuracyChanged() {
         for (OnChangedListener listener : mListeners) {
