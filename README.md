@@ -19,3 +19,9 @@ on the command line:
 
 To start the sample, say "ok glass, show a line" from the Glass clock
 screen or use the touch menu.
+
+This was based on the example :  gdk-compass-sample
+
+https://github.com/googleglass/gdk-compass-sample
+
+and modified to make it a minimalistic example.
